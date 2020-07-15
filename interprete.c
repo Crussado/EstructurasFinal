@@ -14,15 +14,18 @@ int verificar_alias (char* alias) {
   return noFalla;
 }
 
+//int strtol(cadena, char * sobra, 10);
+
 TipoConjunto verificar_conjunto (char* conjunto, int* listaConjunto, int* largo) {
-  if(strcmp(conjunto, " ") == 0){
+  if(strcmp(conjunto, "}") == 0){
     *largo = 0;
     return EXTENSION;
   }
+  
   int a, b;
   char var1[MAX_BUFF], var2[MAX_BUFF], resto[MAX_BUFF];
-  if(sscanf(conjunto, "%s : %d <= %s <= %d%[^\n]", var1, &a, var2, &b, resto) == 4) { // RESTO DESPUES DEL ULTIMO VALOR???????!?!?!!?!?
-    if((strcmp(var1, var2) == 0)) {
+  if(sscanf(conjunto, "%s : %d <= %s <= %d%[^\n]", var1, &a, var2, &b, resto) == 5) { // RESTO DESPUES DEL ULTIMO VALOR???????!?!?!!?!?
+    if((strcmp(var1, var2) == 0) && (strcmp(resto, "}") == 0)) {
       listaConjunto[0] = a;
       listaConjunto[1] = b;
       *largo = 2;
@@ -31,28 +34,21 @@ TipoConjunto verificar_conjunto (char* conjunto, int* listaConjunto, int* largo)
     else
       return ERROR;      
   }
-  int falla = 0, cont = 0, i;
+  char* sobras = conjunto;
+  int falla = 0, termine = 0;
   *largo = 0;
-  for(i = 0; conjunto[i] != '\0' && !falla; i++) {
-    if(isdigit(conjunto[i])) {
-      var1[cont] = conjunto[i];
-      cont++;
-    }
-    else if(conjunto[i] == ',') {
-      var1[cont] = conjunto[i];   //PUEDEN INGRESAR NUMEROS MUY GRANDES?!?!???????????
-      listaConjunto[*largo] = atoi(var1);
-      *largo = *largo + 1;
-      cont = 0;
-    }
-    else
+  while (!falla && !termine) {
+    listaConjunto[*largo] = strtol(sobras, &sobras, 10);
+    *largo = *largo + 1;
+    if(sobras[0] == ',' && sobras[1] != ',')
+      sobras++;
+    else if(strcmp(sobras, "}") == 0)
+      termine = 1;
+    else 
       falla = 1;
   }
   if(falla)
     return ERROR;
-
-  var1[cont] = conjunto[i];
-  listaConjunto[*largo] = atoi(var1);
-  *largo = *largo + 1;
   return EXTENSION;
 }
 
@@ -100,8 +96,8 @@ Accion analizar_comando(char *ingreso, char* cadena1, char* cadena2, char* caden
       return FALLO;
   }
 
-  if(sscanf(ingreso, "%s = {%[^}]%[^\n]", cadena1, cadena2, cadena3) == 3)
-    if(verificar_alias(cadena1) && (strcmp(cadena3, "}") == 0))
+  if(sscanf(ingreso, "%s = {%[^\n]", cadena1, cadena2) == 2)
+    if(verificar_alias(cadena1))
       return CREAR;
   return FALLO;
 }
