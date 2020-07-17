@@ -14,9 +14,8 @@ int verificar_alias (char* alias) {
   return noFalla;
 }
 
-//int strtol(cadena, char * sobra, 10);
-
 TipoConjunto verificar_conjunto (char* conjunto, int* listaConjunto, int* largo) {
+
   if(strcmp(conjunto, "}") == 0){
     *largo = 0;
     return EXTENSION;
@@ -24,7 +23,7 @@ TipoConjunto verificar_conjunto (char* conjunto, int* listaConjunto, int* largo)
   
   int a, b;
   char var1[MAX_BUFF], var2[MAX_BUFF], resto[MAX_BUFF];
-  if(sscanf(conjunto, "%s : %d <= %s <= %d%[^\n]", var1, &a, var2, &b, resto) == 5) { // RESTO DESPUES DEL ULTIMO VALOR???????!?!?!!?!?
+  if(sscanf(conjunto, "%s : %d <= %s <= %d%[^\n]", var1, &a, var2, &b, resto) == 5) {
     if((strcmp(var1, var2) == 0) && (strcmp(resto, "}") == 0)) {
       listaConjunto[0] = a;
       listaConjunto[1] = b;
@@ -64,36 +63,31 @@ Accion analizar_comando(char *ingreso, char* cadena1, char* cadena2, char* caden
   if(sscanf(ingreso, "imprimir %[^\n]", cadena1) == 1) {
     if(verificar_alias(cadena1))
       return IMPRIMIR;
-    else 
-      return FALLO;
+    return FALLO;
   }
 
   if(sscanf(ingreso, "%s = ~%[^\n]", cadena1, cadena2) == 2) {
     if(verificar_alias(cadena1) && verificar_alias(cadena2))
       return COMPLEMENTO;
-    else 
-      return FALLO;
+    return FALLO;
   }
 
   if(sscanf(ingreso, "%s = %s - %[^\n]", cadena1, cadena2, cadena3) == 3) {
     if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3))
       return RESTAR;
-    else 
-      return FALLO;
+    return FALLO;
   }
 
   if(sscanf(ingreso, "%s = %s & %[^\n]", cadena1, cadena2, cadena3) == 3) {
     if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3))
       return INTERSECTAR;
-    else 
-      return FALLO;
+    return FALLO;
   }
 
   if(sscanf(ingreso, "%s = %s | %[^\n]", cadena1, cadena2, cadena3) == 3) {
     if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3))
       return UNIR;
-    else 
-      return FALLO;
+    return FALLO;
   }
 
   if(sscanf(ingreso, "%s = {%[^\n]", cadena1, cadena2) == 2)
