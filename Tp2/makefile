@@ -7,7 +7,7 @@ INTERPRETE = interprete.c
 BANDERAS = -Wall -Wextra -Werror -g -std=c99
 
 armar: programa 
-	
+
 programa: $(PROGRAMA) $(INTERVALO:.c=.o) $(ITREE:.c=.o) $(INTERPRETE:.c=.o)
 	gcc -o interprete $(PROGRAMA) $(INTERVALO:.c=.o) $(ITREE:.c=.o) $(INTERPRETE:.c=.o) $(BANDERAS) 
 $(INTERVALO:.c=.o): $(INTERVALO) $(INTERVALO:.c=.h)
