@@ -67,6 +67,8 @@ void* tablahash_buscar(TablaHash* tabla, void* clave);
  */
 void tablahash_eliminar(TablaHash* tabla, void* clave);
 
+void tablahash_unir(TablaHash* tabla, char cadena1[], char cadena2[], char cadena3[]);
+
 /**
  * Destruye la tabla.
  */

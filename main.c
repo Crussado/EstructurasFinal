@@ -74,7 +74,7 @@ int main() {
         }
         break;
       case UNIR: 
-        printf("%s = %s union %s\n", cadena1, cadena2, cadena3);
+        tablahash_unir(th, cadena1, cadena2, cadena3);
         break;
       case INTERSECTAR: 
         printf("%s = %s interseccion %s\n", cadena1, cadena2, cadena3);
@@ -93,5 +93,6 @@ int main() {
         break;
     }
   }
+  tablahash_destruir(th);
   return 0;
 }

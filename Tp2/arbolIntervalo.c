@@ -239,6 +239,27 @@ Itree itree_insertar_avl (Itree arbol, Intervalo intervalo) {
   return arbol;
 }
 
+Itree itree_copiar(Itree arbol) {
+  if(itree_empty(arbol))
+    return itree_crear();
+  Intervalo intervalo = arbol->intervalo;
+  Itree nuevoArbol = itree_crear();
+  nuevoArbol = itree_insertar_avl(nuevoArbol, intervalo);
+  nuevoArbol->right = itree_copiar(arbol->right);
+  nuevoArbol->left = itree_copiar(arbol->left);
+  return nuevoArbol;
+}
+
+Itree itree_unir(Itree arbol1, Itree arbol2) {
+  if(itree_empty(arbol2))
+    return arbol1;
+  if(itree_empty(arbol1))
+    return itree_copiar(arbol2);
+  arbol1 = itree_insertar_avl(arbol1, arbol2->intervalo);
+  arbol1 = itree_unir(arbol1, arbol2->left);
+  arbol1 = itree_unir(arbol1, arbol2->right);
+  return arbol1;
+}
 //itree_intersectar se encarga de dado un intervalo ver si existe algun intervalo
 //con el cual haya interseccion y de devolver el mismo. Casi contrario, devuelve NULL.
 //itree_intersectar: Itree->PIntervalo->Itree

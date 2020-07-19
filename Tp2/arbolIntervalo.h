@@ -34,4 +34,8 @@ void itree_recorrer_dfs(Itree arbol, BTRecorrido orden);
 
 int itree_altura(Itree arbol);
 
+Itree itree_copiar(Itree arbol);
+
+Itree itree_unir(Itree arbol1, Itree arbol2);
+
 #endif /* __ARBOLINTERVALO_H__ */
