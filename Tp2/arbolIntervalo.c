@@ -227,23 +227,23 @@ Itree itree_insertar_avl (Itree arbol, Intervalo intervalo) {
       }
     return arbol;
   }
-  int bandera = inter_comparar (arbol->intervalo, intervalo);
+  int bandera = inter_comparar(arbol->intervalo, intervalo);
   if(bandera == 1)
     arbol->left = itree_insertar_avl(arbol->left, intervalo);
   else
     arbol->right = itree_insertar_avl(arbol->right, intervalo);
  
   actualizar_compy_mayor(arbol); 
-  actualizar_altura (arbol);
-  arbol = balancear (arbol);
+  actualizar_altura(arbol);
+  arbol = balancear(arbol);
   return arbol;
 }
 
 Itree itree_copiar(Itree arbol) {
-  if(itree_empty(arbol))
-    return itree_crear();
-  Intervalo intervalo = arbol->intervalo;
   Itree nuevoArbol = itree_crear();
+  if(itree_empty(arbol))
+    return nuevoArbol;
+  Intervalo intervalo = arbol->intervalo;
   nuevoArbol = itree_insertar_avl(nuevoArbol, intervalo);
   nuevoArbol->right = itree_copiar(arbol->right);
   nuevoArbol->left = itree_copiar(arbol->left);
@@ -253,26 +253,43 @@ Itree itree_copiar(Itree arbol) {
 Itree itree_unir(Itree arbol1, Itree arbol2) {
   if(itree_empty(arbol2))
     return arbol1;
-  if(itree_empty(arbol1))
-    return itree_copiar(arbol2);
-  arbol1 = itree_insertar_avl(arbol1, arbol2->intervalo);
+  Intervalo intervalo = arbol2->intervalo;
+  arbol1 = itree_insertar_avl(arbol1, intervalo);
   arbol1 = itree_unir(arbol1, arbol2->left);
   arbol1 = itree_unir(arbol1, arbol2->right);
   return arbol1;
 }
+
+int hay_posibilidad(Itree arbol, Intervalo intervalo) {
+  if(itree_empty(arbol))
+    return 0;
+  if(arbol->maxDerecha >= inter_x(intervalo))
+    return 1;
+  return 0;
+}
+
 //itree_intersectar se encarga de dado un intervalo ver si existe algun intervalo
 //con el cual haya interseccion y de devolver el mismo. Casi contrario, devuelve NULL.
 //itree_intersectar: Itree->PIntervalo->Itree
-/*Itree itree_intersectar(Itree arbol, PIntervalo intervalo) {
-  if(arbol == NULL)
+Itree itree_intersectar_base(Itree arbol, Itree arbol1, Intervalo intervalo) {
+  if(!hay_posibilidad(arbol1, intervalo))
     return arbol;
-  if(inter_intersectar(arbol->intervalo, intervalo))
+  if(inter_puede_intersectar(arbol1->intervalo, intervalo)) {
+    Intervalo interseccion = inter_intersectar(arbol1->intervalo, intervalo);
+    arbol = itree_insertar_avl(arbol, interseccion);
+  }
+  if(inter_y(intervalo) > inter_y(arbol1->intervalo) && hay_posibilidad(arbol1->right, intervalo))
+    arbol = itree_intersectar_base(arbol, arbol1->right, intervalo);
+  if(inter_x(intervalo) < inter_x(arbol1->intervalo) && hay_posibilidad(arbol1->left, intervalo))
+    arbol = itree_intersectar_base(arbol, arbol1->left, intervalo);
+  return arbol;
+}
+
+Itree itree_intersectar(Itree arbol, Itree arbol1, Itree arbol2) {
+  if(itree_empty(arbol1) || itree_empty(arbol2))
     return arbol;
-  if(intervalo->compy < arbol->intervalo->compx)
-    return itree_intersectar(arbol->left, intervalo);
-  if(arbol->left == NULL)
-    return itree_intersectar(arbol->right, intervalo);
-  if(arbol->left->maxDerecha >= intervalo->compx) // a---[a--------[c---b]--d]--b]
-    return itree_intersectar(arbol->left, intervalo);
-  return itree_intersectar(arbol->right, intervalo);
-}*/
+  arbol = itree_intersectar_base(arbol, arbol1, arbol2->intervalo);
+  arbol = itree_intersectar(arbol, arbol1, arbol2->left);
+  arbol = itree_intersectar(arbol, arbol1, arbol2->right);
+  return arbol;
+}

@@ -42,7 +42,7 @@ int slist_vacia(SList lista);
 /**
  * Agrega un elemento al inicio de la lista.
  */
-SList slist_agregar(SList lista, void* dato, void* clave, FuncionIgualdad comparar, unsigned* cantElem);
+SList slist_agregar(SList lista, void* dato);
 
 int slist_longitud(SList lista);
 

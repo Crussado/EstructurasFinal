@@ -6,12 +6,16 @@
 /**
  * Tipo de las funciones hash a ser consideradas por las tablas hash.
  */
+#ifndef __FUNCIONHASH__
+#define __FUNCIONHASH__
 typedef unsigned (*FuncionHash)(void *);
+#endif
 
 #ifndef __FUNCIONIGUALDAD__
 #define __FUNCIONIGUALDAD__
 typedef int (*FuncionIgualdad)(void *, void *);
 #endif
+
 
 /**
  * Casillas en la que almacenaremos los datos de la tabla hash.

@@ -28,7 +28,9 @@ Itree itree_insertar_avl(Itree arbol, Intervalo dato);
 
 Itree itree_eliminar(Itree arbol, Intervalo dato);
 
-Itree itree_intersectar(Itree arbol, PIntervalo dato);
+Itree itree_intersectar_base(Itree arbol, Itree arbol1, Intervalo intervalo);
+
+Itree itree_intersectar(Itree arbol, Itree arbol1, Itree arbol2);
 
 void itree_recorrer_dfs(Itree arbol, BTRecorrido orden);
 

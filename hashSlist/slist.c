@@ -21,24 +21,11 @@ int slist_vacia(SList lista) {
   return lista == NULL;
 }
 
-SList slist_agregar(SList lista, void* dato, void* clave, FuncionIgualdad comparar, unsigned* cantElem) {
-  SList aux = lista;
-  int termine = 0;
-  for(; aux != NULL && !termine; aux = aux->sig) {
-    if(comparar(lista->dato, clave) == 0) {
-      actualizar_dato(lista->dato, dato);
-      destruir_clave(clave);
-      termine = 1;
-    }
-  }
-  if(!termine) {
-    SNodo *nuevoNodo = malloc(sizeof(SNodo));
-    nuevoNodo->dato = crear_casilla(clave, dato);
-    nuevoNodo->sig = lista;
-    return nuevoNodo;
-    *cantElem = *cantElem + 1;
-  }
-  return lista;
+SList slist_agregar(SList lista, void* dato) {
+  SList nodoNuevo = malloc(sizeof(SNodo));
+  nodoNuevo->dato = dato;
+  nodoNuevo->sig = lista;
+  return nodoNuevo;
 }
 
 int slist_longitud(SList lista){

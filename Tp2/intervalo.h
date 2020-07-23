@@ -10,15 +10,17 @@ typedef struct {
 
 typedef Intervalo *PIntervalo;
 
-Intervalo inter_crear (int x, int y);
+Intervalo inter_crear(int x, int y);
 
-void inter_eliminar (PIntervalo intervalo);
+void inter_eliminar(PIntervalo intervalo);
 
-int inter_intersectar (Intervalo intervalo, Intervalo nuevo);
+int inter_puede_intersectar(Intervalo intervalo, Intervalo nuevo);
 
-void inter_imprimir (Intervalo intervalo);
+Intervalo inter_intersectar(Intervalo intervalo1, Intervalo intervalo2);
 
-int inter_comparar (Intervalo i1, Intervalo i2);
+void inter_imprimir(Intervalo intervalo);
+
+int inter_comparar(Intervalo i1, Intervalo i2);
 
 int inter_y(Intervalo intervalo);
 

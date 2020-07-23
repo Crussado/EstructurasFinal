@@ -25,9 +25,9 @@ int main() {
   TablaHash *th = tablahash_crear(25, hash, iguales);
   Intervalo intervalo;
   TipoConjunto conjuntoPor;
-  CasillaHash* casilla;
+  CasillaHash* casilla, * casilla2;
   char* alias;
-  Itree arbol;
+  Itree arbol, arbol2, arbol3;
   int conjunto[MAX_BUFF], largo;
   char ingreso[MAX_BUFF], cadena1[MAX_BUFF], cadena2[MAX_BUFF], cadena3[MAX_BUFF];
   while(comando != SALIR) {
@@ -74,10 +74,30 @@ int main() {
         }
         break;
       case UNIR: 
-        tablahash_unir(th, cadena1, cadena2, cadena3);
+        casilla = tablahash_buscar(th, cadena2);
+        casilla2 = tablahash_buscar(th, cadena3);
+        if(casilla != NULL && casilla2 != NULL) {
+          arbol2 = obtener_dato(casilla);
+          arbol3 = obtener_dato(casilla2);
+        }
+        arbol = itree_copiar(arbol2);
+        arbol = itree_unir(arbol, arbol3);
+        alias = malloc(sizeof(char)* (strlen(cadena1) + 1));
+        strcpy(alias, cadena1);
+        tablahash_insertar(th, alias, arbol);
         break;
       case INTERSECTAR: 
-        printf("%s = %s interseccion %s\n", cadena1, cadena2, cadena3);
+        casilla = tablahash_buscar(th, cadena2);
+        casilla2 = tablahash_buscar(th, cadena3);
+        if(casilla != NULL && casilla2 != NULL) {
+          arbol2 = obtener_dato(casilla);
+          arbol3 = obtener_dato(casilla2);
+        }
+        arbol = itree_crear();
+        arbol = itree_intersectar(arbol, arbol2, arbol3);
+        alias = malloc(sizeof(char)* (strlen(cadena1) + 1));
+        strcpy(alias, cadena1);
+        tablahash_insertar(th, alias, arbol);
         break;
       case RESTAR: 
         printf("%s = %s menos %s\n", cadena1, cadena2, cadena3);

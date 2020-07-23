@@ -25,14 +25,32 @@ int inter_y(Intervalo intervalo) {
 
 //inter_eliminar se encarga de eliminar un intervalo dado.
 //inter_eliminar: PIntervalo->NULL
-void inter_eliminar (PIntervalo intervalo) {
+void inter_eliminar(PIntervalo intervalo) {
   free(intervalo);
 }
 
+Intervalo inter_intersectar(Intervalo intervalo1, Intervalo intervalo2) {
+  Intervalo interseccion;
+  if(inter_x(intervalo1) <= inter_x(intervalo2) && inter_y(intervalo1) >= inter_x(intervalo2)) {
+    if(inter_y(intervalo2) <= inter_y(intervalo1))
+      interseccion = intervalo2;
+    else 
+      interseccion = inter_crear(inter_x(intervalo2), inter_y(intervalo1));
+  }
+  if(inter_x(intervalo2) <= inter_x(intervalo1) && inter_y(intervalo2) >= inter_x(intervalo1)) {
+    if(inter_y(intervalo1) <= inter_y(intervalo2))
+      interseccion = intervalo1;
+    else 
+      interseccion = inter_crear(inter_x(intervalo1), inter_y(intervalo2));
+  }
+  return interseccion;
+}
+
+
 //inter_intersectar se encarga de dados 2 intervalos ver si los mismos se intersectan.
 //inter_intersectar: Intervalo->Intervalo->Int
-int inter_intersectar (Intervalo intervalo, Intervalo nuevo) {
-  if (inter_x(intervalo) <= inter_x(nuevo) && inter_y(intervalo) >= inter_x(nuevo))
+int inter_puede_intersectar(Intervalo intervalo, Intervalo nuevo) {
+  if(inter_x(intervalo) <= inter_x(nuevo) && inter_y(intervalo) >= inter_x(nuevo))
     return 1;
   if(inter_x(nuevo) <= inter_x(intervalo) && inter_y(nuevo) >= inter_x(intervalo))
     return 1;
@@ -41,7 +59,7 @@ int inter_intersectar (Intervalo intervalo, Intervalo nuevo) {
 
 //inter_imprimir se encarga de imprimir un intervalo.
 //inter_imprimir: Intervalo->NULL
-void inter_imprimir (Intervalo intervalo) {
+void inter_imprimir(Intervalo intervalo) {
   if(inter_x(intervalo) == inter_y(intervalo))
     printf("%d ", inter_x(intervalo));
   else
@@ -50,7 +68,7 @@ void inter_imprimir (Intervalo intervalo) {
 
 //inter_comparar se encarga de dados dos intervalos, comparar sus respectivas componentes.
 //inter_comparar: Intervalo->Intervalo->Int
-int inter_comparar (Intervalo i1, Intervalo i2) {
+int inter_comparar(Intervalo i1, Intervalo i2) {
   if(inter_x(i1) == inter_x(i2) && inter_y(i1) == inter_y(i2))
     return 0;
   if(inter_x(i1) == inter_x(i2)) {
