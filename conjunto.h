@@ -22,11 +22,11 @@ typedef struct {
   TablaHash* tabla;
 } Conjuntos;
 
-void conjuntos_eliminar(Conjuntos* conjunto);
+void conjuntos_destruir(Conjuntos* conjunto);
 
 Conjuntos* conjuntos_crear();
 
-Itree* conjuntos_buscar(Conjuntos* conjunto, char* alias);
+void conjuntos_imprimir(Conjuntos* conjunto, char* alias);
 
 void conjuntos_insertar(Conjuntos* conjunto, char* alias, int* numeros, int longitud, int forma);
 

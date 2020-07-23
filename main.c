@@ -2,33 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "conjunto.h"
 #include "interprete.h"
-#include "Tp2/intervalo.h"
-#include "hashSlist/tablahash.h"
-#include "hashSlist/slist.h"
-#include "Tp2/arbolIntervalo.h"
-
-int iguales(void* casilla, void* clave2) {
-  char* c1 = ((CasillaHash *)casilla)->clave, * c2 = clave2;
-  return strcmp(c1, c2);
-}
-
-unsigned hash(void* clave) {
-  char* c = clave;
-  return (c[0] - '0');
-}
 
 //main es aquella que lleva a cabo la estructura del programa.
 //main: Int->Char**->Int.
 int main() {
   Accion comando = CREAR;
-  TablaHash *th = tablahash_crear(25, hash, iguales);
-  Intervalo intervalo;
+  Conjuntos* conjuntos = conjuntos_crear();
   TipoConjunto conjuntoPor;
-  CasillaHash* casilla, * casilla2;
-  char* alias;
-  Itree arbol, arbol2, arbol3;
-  int conjunto[MAX_BUFF], largo;
+  int numeros[MAX_BUFF], largo;
   char ingreso[MAX_BUFF], cadena1[MAX_BUFF], cadena2[MAX_BUFF], cadena3[MAX_BUFF];
   while(comando != SALIR) {
     printf("Introduzca el comando: ");
@@ -36,68 +19,27 @@ int main() {
     comando = analizar_comando(ingreso, cadena1, cadena2, cadena3); 
     switch(comando) {
       case CREAR: 
-        conjuntoPor = verificar_conjunto(cadena2, conjunto, &largo);
+        conjuntoPor = verificar_conjunto(cadena2, numeros, &largo);
         switch (conjuntoPor) {
-        case COMPRESION:
-          alias = malloc(sizeof(char)* (strlen(cadena1) + 1));
-          strcpy(alias, cadena1);
-          arbol = itree_crear();
-          intervalo = inter_crear(conjunto[0], conjunto[1]);
-          arbol = itree_insertar_avl(arbol, intervalo);
-          tablahash_insertar(th, alias, arbol);
+        case COMPRESION: // HACER NULO CUANDO FALLA
+          conjuntos_insertar(conjuntos, cadena1, numeros, largo, 1);
           break;
         case EXTENSION:
-          alias = malloc(sizeof(char)* (strlen(cadena1) + 1));
-          strcpy(alias, cadena1);
-          arbol = itree_crear();
-          for(int i = 0; i < largo; i++) {
-            intervalo = inter_crear(conjunto[i], conjunto[i]);
-            arbol = itree_insertar_avl(arbol, intervalo);
-          }
-          tablahash_insertar(th, alias, arbol);
+          conjuntos_insertar(conjuntos, cadena1, numeros, largo, 0);
           break;
-        
         default:
-          printf("fallo en el conjunto\n");
+          printf("Fallo en el conjunto\n");
           break;
         }
         break;
       case IMPRIMIR:
-        casilla = tablahash_buscar(th, cadena1);
-        if(casilla == NULL)
-          printf("No existe el conjunto\n");
-        else {
-          printf("%s: ", cadena1);
-          arbol = obtener_dato(casilla);
-          itree_recorrer_dfs(arbol, ITREE_RECORRIDO_IN);
-          puts("");
-        }
+        conjuntos_imprimir(conjuntos, cadena1);
         break;
       case UNIR: 
-        casilla = tablahash_buscar(th, cadena2);
-        casilla2 = tablahash_buscar(th, cadena3);
-        if(casilla != NULL && casilla2 != NULL) {
-          arbol2 = obtener_dato(casilla);
-          arbol3 = obtener_dato(casilla2);
-        }
-        arbol = itree_copiar(arbol2);
-        arbol = itree_unir(arbol, arbol3);
-        alias = malloc(sizeof(char)* (strlen(cadena1) + 1));
-        strcpy(alias, cadena1);
-        tablahash_insertar(th, alias, arbol);
+        conjuntos_unir(conjuntos, cadena1, cadena2, cadena3);
         break;
       case INTERSECTAR: 
-        casilla = tablahash_buscar(th, cadena2);
-        casilla2 = tablahash_buscar(th, cadena3);
-        if(casilla != NULL && casilla2 != NULL) {
-          arbol2 = obtener_dato(casilla);
-          arbol3 = obtener_dato(casilla2);
-        }
-        arbol = itree_crear();
-        arbol = itree_intersectar(arbol, arbol2, arbol3);
-        alias = malloc(sizeof(char)* (strlen(cadena1) + 1));
-        strcpy(alias, cadena1);
-        tablahash_insertar(th, alias, arbol);
+        conjuntos_intersectar(conjuntos, cadena1, cadena2, cadena3);
         break;
       case RESTAR: 
         printf("%s = %s menos %s\n", cadena1, cadena2, cadena3);
@@ -106,13 +48,13 @@ int main() {
         printf("%s = complemento de %s\n", cadena1, cadena2); 
         break;
       case FALLO:
-        printf("error en el comando\n");
+        printf("Error en el comando\n");
         break;
       default:
         printf("no vimo\n");
         break;
     }
   }
-  tablahash_destruir(th);
+  conjuntos_destruir(conjuntos);
   return 0;
 }

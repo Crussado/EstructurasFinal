@@ -26,7 +26,7 @@ void eliminarClave(void* clave) {
   free(clave);
 }
 
-void conjuntos_eliminar(Conjuntos* conjunto) {
+void conjuntos_destruir(Conjuntos* conjunto) {
   tablahash_destruir(conjunto->tabla);
   free(conjunto);
 }
@@ -37,12 +37,16 @@ Conjuntos* conjuntos_crear() {
   return conjuntos;
 }
 
-Itree* conjuntos_buscar(Conjuntos* conjunto, char* alias) {
+void conjuntos_imprimir(Conjuntos* conjunto, char* alias) {
   CasillaHash* casillaBuscada = tablahash_buscar(conjunto->tabla, alias);
-  if(casillaBuscada != NULL)
-    return casilla_obtener_dato(casillaBuscada);
+  if(casillaBuscada != NULL) {
+    printf("%s = {", alias);
+    itree_recorrer_dfs(casilla_obtener_dato(casillaBuscada), ITREE_RECORRIDO_IN);
+    puts("");
+  }
+  else
   printf("No existe el conjunto\n");
-  return NULL;
+  
 }
 
 void conjuntos_insertar(Conjuntos* conjunto, char* alias, int* numeros, int longitud, int forma) {
