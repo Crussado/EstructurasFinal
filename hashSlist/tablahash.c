@@ -4,30 +4,25 @@
 #include <stdio.h>
 #include <string.h>
 #include "slist.h"
-#include "../Tp2/arbolIntervalo.h"
-/**
- * Crea una nueva tabla Hash vacía, con la capacidad dada.
- */
 
-void destruir_clave(void* clave) {
-  free(clave);
-}
-
-void destruir_dato(void* dato) {
-  itree_destruir(dato);
-}
-
-void eliminarCasilla (void* casilla) {
-  destruir_clave(((CasillaHash *)casilla)->clave);
-  destruir_dato(((CasillaHash *)casilla)->dato);
-}
-
-void* obtener_clave(CasillaHash* casilla) {
+void* casilla_obtener_clave(CasillaHash* casilla) {
   return casilla->clave;
 }
 
-void* obtener_dato(CasillaHash* casilla) {
+void* casilla_obtener_dato(CasillaHash* casilla) {
   return casilla->dato;
+}
+
+void casilla_eliminar(void* casilla, void* tabla) {
+  CasillaHash* c = casilla;
+  TablaHash* t = tabla;
+  t->elimClave(c->clave);
+  t->elimDato(c->dato);
+  free(c);
+}
+
+void casilla_actualizar_dato(CasillaHash* casilla, void* dato) {
+  casilla->dato = dato;
 }
 
 //int comparar_casilla_clave(void* clave, void* casilla) {
@@ -43,7 +38,7 @@ CasillaHash* crear_casilla(void* clave, void* dato) {
   return casilla;
 }
 
-TablaHash* tablahash_crear(unsigned capacidad, FuncionHash hash, FuncionIgualdad igual) {
+TablaHash* tablahash_crear(unsigned capacidad, FuncionHash hash, FuncionIgualdad igual, FuncionElimDato elimDato, FuncionElimClave elimClave) {
   // Pedimos memoria para la estructura principal y las casillas.
   TablaHash* tabla = malloc(sizeof(TablaHash));
   tabla->hash = hash;
@@ -51,6 +46,8 @@ TablaHash* tablahash_crear(unsigned capacidad, FuncionHash hash, FuncionIgualdad
   tabla->tabla = malloc(sizeof(SList) * capacidad);
   tabla->numElems = 0;
   tabla->igual = igual;
+  tabla->elimClave = elimClave;
+  tabla->elimDato = elimDato;
 
   // Inicializamos las casillas con datos nulos.
   for (unsigned idx = 0; idx < capacidad; ++idx)
@@ -85,9 +82,9 @@ void tablahash_insertar(TablaHash* tabla, void* clave, void* dato) {
     tabla->numElems++;
   }
   else {
-    destruir_dato(casilla->dato);
-    casilla->dato = dato;
-    destruir_clave(clave);
+    tabla->elimDato(casilla_obtener_dato(casilla));
+    casilla_actualizar_dato(casilla, dato);
+    tabla->elimClave(clave);
   }
 }
 
@@ -99,7 +96,7 @@ void tablahash_eliminar(TablaHash* tabla, void* clave) {
   unsigned idx = tabla->hash(clave);
   idx = idx % tabla->capacidad;
 
-  tabla->tabla[idx] = slist_eliminar(tabla->tabla[idx], clave, tabla->igual, eliminarCasilla, &(tabla->numElems));
+  tabla->tabla[idx] = slist_eliminar(tabla->tabla[idx], clave, tabla->igual, casilla_eliminar, tabla, &(tabla->numElems));
 }
 
 /**
@@ -107,7 +104,7 @@ void tablahash_eliminar(TablaHash* tabla, void* clave) {
  */
 void tablahash_destruir(TablaHash* tabla) {
   for(unsigned i = 0; i < tabla->capacidad; i++)
-    slist_destruir(tabla->tabla[i], eliminarCasilla);
+    slist_destruir(tabla->tabla[i], casilla_eliminar, tabla);
   free(tabla->tabla);
   free(tabla);
 }

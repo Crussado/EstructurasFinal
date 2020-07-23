@@ -7,12 +7,12 @@ SList slist_crear() {
   return NULL;
 }
 
-void slist_destruir(SList lista, FuncionEliminar elim) {
+void slist_destruir(SList lista, FuncionEliminar elim, void* extra) {
   SNodo *nodoAEliminar;
   while (lista != NULL) {
     nodoAEliminar = lista;
     lista = lista->sig;
-    elim(nodoAEliminar->dato);
+    elim(nodoAEliminar->dato, extra);
     free(nodoAEliminar);
   }
 }
@@ -34,13 +34,13 @@ int slist_longitud(SList lista){
   return cont;
 }
 
-SList slist_eliminar(SList lista, void* clave, FuncionIgualdad comparar, FuncionEliminar elim, unsigned* cant){
+SList slist_eliminar(SList lista, void* clave, FuncionIgualdad comparar, FuncionEliminar elim, void* extra, unsigned* cant){
   if(lista==NULL)
     return NULL;
 
   if(comparar(lista->dato, clave) == 0){
     SList aux = lista->sig;
-    elim(lista->dato);
+    elim(lista->dato, extra);
     free(lista);
     *cant = *cant - 1;
     return aux;
@@ -59,7 +59,7 @@ SList slist_eliminar(SList lista, void* clave, FuncionIgualdad comparar, Funcion
   }
   if(encontrado) {
     padre->sig = hijo->sig;
-    elim(hijo->dato);
+    elim(hijo->dato, extra);
     free(hijo);
     *cant = *cant - 1;
   }
