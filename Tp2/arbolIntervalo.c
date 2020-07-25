@@ -239,12 +239,23 @@ Itree itree_insertar_avl (Itree arbol, Intervalo intervalo) {
   return arbol;
 }
 
+Itree itree_copiar_nodo(Itree nodo) {
+  if(itree_empty(nodo))
+    return itree_crear();
+  Itree copia = malloc(sizeof(BTIntervalo));
+  copia->intervalo = nodo->intervalo;
+  copia->maxDerecha = nodo->maxDerecha;
+  copia->altura = nodo->altura;
+  return copia;
+}
+
 Itree itree_copiar(Itree arbol) {
   Itree nuevoArbol = itree_crear();
   if(itree_empty(arbol))
     return nuevoArbol;
-  Intervalo intervalo = arbol->intervalo;
-  nuevoArbol = itree_insertar_avl(nuevoArbol, intervalo);
+  //Intervalo intervalo = arbol->intervalo;
+  //nuevoArbol = itree_insertar_avl(nuevoArbol, intervalo);
+  nuevoArbol = itree_copiar_nodo(arbol);
   nuevoArbol->right = itree_copiar(arbol->right);
   nuevoArbol->left = itree_copiar(arbol->left);
   return nuevoArbol;

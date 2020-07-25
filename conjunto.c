@@ -40,7 +40,7 @@ Conjuntos* conjuntos_crear() {
 void conjuntos_imprimir(Conjuntos* conjunto, char* alias) {
   CasillaHash* casillaBuscada = tablahash_buscar(conjunto->tabla, alias);
   if(casillaBuscada != NULL) {
-    printf("%s = {", alias);
+    //printf("%s = {", alias);
     itree_recorrer_dfs(casilla_obtener_dato(casillaBuscada), ITREE_RECORRIDO_IN);
     puts("");
   }
@@ -55,8 +55,10 @@ void conjuntos_insertar(Conjuntos* conjunto, char* alias, int* numeros, int long
   char* nombre = malloc(sizeof(char)* (strlen(alias) + 1));
   strcpy(nombre, alias);
   if(forma == 1) { //comprension
-    intervalo = inter_crear(numeros[0], numeros[1]);
-    arbol = itree_insertar_avl(arbol, intervalo);
+    if(longitud != 0) {
+      intervalo = inter_crear(numeros[0], numeros[1]);
+      arbol = itree_insertar_avl(arbol, intervalo);
+    }
   }
   else { //extension
     for(int i = 0; i < longitud; i++) {

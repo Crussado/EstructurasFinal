@@ -27,7 +27,10 @@ TipoConjunto verificar_conjunto (char* conjunto, int* listaConjunto, int* largo)
     if((strcmp(var1, var2) == 0) && (strcmp(resto, "}") == 0)) {
       listaConjunto[0] = a;
       listaConjunto[1] = b;
-      *largo = 2;
+      if(a <= b)
+        *largo = 2;
+      else
+        *largo = 0;
       return COMPRESION;
     }
     else

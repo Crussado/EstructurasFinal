@@ -21,7 +21,7 @@ int main() {
       case CREAR: 
         conjuntoPor = verificar_conjunto(cadena2, numeros, &largo);
         switch (conjuntoPor) {
-        case COMPRESION: // HACER NULO CUANDO FALLA
+        case COMPRESION:
           conjuntos_insertar(conjuntos, cadena1, numeros, largo, 1);
           break;
         case EXTENSION:
