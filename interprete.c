@@ -39,10 +39,12 @@ TipoConjunto verificar_conjunto (char* conjunto, int* listaConjunto, int* largo)
   char* sobras = conjunto;
   int falla = 0, termine = 0;
   *largo = 0;
+  if(sobras[0] == ',')
+    falla = 1;
   while (!falla && !termine) {
     listaConjunto[*largo] = strtol(sobras, &sobras, 10);
     *largo = *largo + 1;
-    if(sobras[0] == ',' && sobras[1] != ',')
+    if(sobras[0] == ',' && sobras[1] != ',' && sobras[1] != '}')
       sobras++;
     else if(strcmp(sobras, "}") == 0)
       termine = 1;
@@ -69,32 +71,28 @@ Accion analizar_comando(char *ingreso, char* cadena1, char* cadena2, char* caden
     return FALLO;
   }
 
-  if(sscanf(ingreso, "%s = ~%[^\n]", cadena1, cadena2) == 2) {
-    if(verificar_alias(cadena1) && verificar_alias(cadena2))
-      return COMPLEMENTO;
-    return FALLO;
+  char caracter;
+
+  if(sscanf(ingreso, "%s = %s %c %[^\n]", cadena1, cadena2, &caracter, cadena3) == 4) {
+    if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3)) {
+      if(caracter == '-')
+        return RESTAR;
+      if(caracter == '|')
+        return UNIR;
+      if(caracter == '&')
+        return INTERSECTAR;
+    }
   }
 
-  if(sscanf(ingreso, "%s = %s - %[^\n]", cadena1, cadena2, cadena3) == 3) {
-    if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3))
-      return RESTAR;
-    return FALLO;
+  if(sscanf(ingreso, "%s = %c%[^\n]", cadena1, &caracter, cadena2) == 3) {
+    printf("AAAAAAA\n");
+    if(verificar_alias(cadena1)) {
+      if(caracter == '}'){
+        printf("AAAAAAA\n");
+        return CREAR;}
+      if(caracter == '~' && verificar_alias(cadena2))
+        return COMPLEMENTO;
+    }
   }
-
-  if(sscanf(ingreso, "%s = %s & %[^\n]", cadena1, cadena2, cadena3) == 3) {
-    if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3))
-      return INTERSECTAR;
-    return FALLO;
-  }
-
-  if(sscanf(ingreso, "%s = %s | %[^\n]", cadena1, cadena2, cadena3) == 3) {
-    if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3))
-      return UNIR;
-    return FALLO;
-  }
-
-  if(sscanf(ingreso, "%s = {%[^\n]", cadena1, cadena2) == 2)
-    if(verificar_alias(cadena1))
-      return CREAR;
   return FALLO;
 }

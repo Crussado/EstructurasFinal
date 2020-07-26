@@ -6,7 +6,6 @@
 #include "interprete.h"
 
 //main es aquella que lleva a cabo la estructura del programa.
-//main: Int->Char**->Int.
 int main() {
   Accion comando = CREAR;
   Conjuntos* conjuntos = conjuntos_crear();
