@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "conjunto.h"
+#include "conjuntos/conjunto.h"
 #include "interprete.h"
 
 //main es aquella que lleva a cabo la estructura del programa.

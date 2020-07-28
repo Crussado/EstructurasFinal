@@ -2,8 +2,8 @@
 #define __CONJUNTO_H__
 
 #include <stddef.h>
-#include "Tp2/arbolIntervalo.h"
-#include "Tp2/intervalo.h"
+#include "arbolIntervalo/arbolIntervalo.h"
+#include "arbolIntervalo/intervalo.h"
 #include "hashSlist/tablahash.h"
 
 #ifndef __FUNCIONHASH__

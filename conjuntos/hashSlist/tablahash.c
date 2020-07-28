@@ -13,6 +13,10 @@ void* casilla_obtener_dato(CasillaHash* casilla) {
   return casilla->dato;
 }
 
+int casilla_empty(CasillaHash* casilla)  {
+  return casilla == NULL;
+}
+
 void casilla_eliminar(void* casilla, void* tabla) {
   CasillaHash* c = casilla;
   TablaHash* t = tabla;
@@ -76,7 +80,7 @@ void tablahash_insertar(TablaHash* tabla, void* clave, void* dato) {
   unsigned idx = tabla->hash(clave);
   idx = idx % tabla->capacidad;
   CasillaHash* casilla = tablahash_buscar(tabla, clave);
-  if(casilla == NULL) {
+  if(casilla_empty(casilla)) {
     casilla = crear_casilla(clave, dato);
     tabla->tabla[idx] = slist_agregar(tabla->tabla[idx], casilla);
     tabla->numElems++;

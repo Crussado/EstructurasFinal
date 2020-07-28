@@ -60,6 +60,8 @@ void* casilla_obtener_clave(CasillaHash* casilla);
 
 void* casilla_obtener_dato(CasillaHash* casilla);
 
+int casilla_empty(CasillaHash* casilla);
+
 TablaHash* tablahash_crear(unsigned capacidad, FuncionHash fun, FuncionIgualdad igual, FuncionElimDato elimDato, FuncionElimClave elimClave);
 
 void destruir_clave(void* clave);

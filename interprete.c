@@ -64,15 +64,14 @@ Accion analizar_comando(char *ingreso, char* cadena1, char* cadena2, char* caden
 
   if(strcmp(ingreso, "salir\n") == 0)
     return SALIR;
-  
-  if(sscanf(ingreso, "imprimir %[^\n]", cadena1) == 1) {
-    if(verificar_alias(cadena1))
+  char espacio;
+  if(sscanf(ingreso, "imprimir%c%[^\n]", &espacio, cadena1) == 2) {
+    if(verificar_alias(cadena1) && espacio == ' ')
       return IMPRIMIR;
     return FALLO;
   }
 
   char caracter;
-
   if(sscanf(ingreso, "%s = %s %c %[^\n]", cadena1, cadena2, &caracter, cadena3) == 4) {
     if(verificar_alias(cadena1) && verificar_alias(cadena2) && verificar_alias(cadena3)) {
       if(caracter == '-')
@@ -84,12 +83,11 @@ Accion analizar_comando(char *ingreso, char* cadena1, char* cadena2, char* caden
     }
   }
 
-  if(sscanf(ingreso, "%s = %c%[^\n]", cadena1, &caracter, cadena2) == 3) {
-    printf("AAAAAAA\n");
-    if(verificar_alias(cadena1)) {
-      if(caracter == '}'){
-        printf("AAAAAAA\n");
-        return CREAR;}
+  if(sscanf(ingreso, "%s =%c%c%[^\n]", cadena1, &espacio, &caracter, cadena2) == 4) {
+    if(verificar_alias(cadena1) && espacio == ' ') {
+      if(caracter == '{'){
+        return CREAR;
+      }
       if(caracter == '~' && verificar_alias(cadena2))
         return COMPLEMENTO;
     }

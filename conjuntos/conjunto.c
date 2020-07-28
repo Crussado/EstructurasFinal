@@ -1,5 +1,5 @@
-#include "Tp2/arbolIntervalo.h"
-#include "Tp2/intervalo.h"
+#include "arbolIntervalo/arbolIntervalo.h"
+#include "arbolIntervalo/intervalo.h"
 #include "hashSlist/tablahash.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -39,14 +39,13 @@ Conjuntos* conjuntos_crear() {
 
 void conjuntos_imprimir(Conjuntos* conjunto, char* alias) {
   CasillaHash* casillaBuscada = tablahash_buscar(conjunto->tabla, alias);
-  if(casillaBuscada != NULL) {
+  if(!casilla_empty(casillaBuscada)) {
     //printf("%s = {", alias);
     itree_recorrer_dfs(casilla_obtener_dato(casillaBuscada), ITREE_RECORRIDO_IN);
     puts("");
   }
   else
-  printf("No existe el conjunto\n");
-  
+    printf("No existe el conjunto\n");
 }
 
 void conjuntos_insertar(Conjuntos* conjunto, char* alias, int* numeros, int longitud, int forma) {
@@ -74,7 +73,7 @@ void conjuntos_unir(Conjuntos* conjunto, char* alias1, char* alias2, char* alias
   CasillaHash* casilla2, * casilla3;
   casilla2 = tablahash_buscar(conjunto->tabla, alias2);
   casilla3 = tablahash_buscar(conjunto->tabla, alias3);
-  if(casilla3 == NULL || casilla2 == NULL)
+  if(casilla_empty(casilla2) || casilla_empty(casilla3))
     printf("No existen los conjuntos\n");
   else {
     arbol2 = casilla_obtener_dato(casilla2);
@@ -85,10 +84,6 @@ void conjuntos_unir(Conjuntos* conjunto, char* alias1, char* alias2, char* alias
       else  // B = A U A
         arbol1 = itree_copiar(arbol2);
     }
-    else if(strcmp(alias1, alias2) == 0) // A = A U B
-      arbol1 = itree_unir(arbol2, arbol3);
-    else if(strcmp(alias1, alias3) == 0) // A = B U A
-      arbol1 = itree_unir(arbol3, arbol2);
     else { // A = B U C
       arbol1 = itree_copiar(arbol3);
       arbol1 = itree_unir(arbol1, arbol2);
@@ -104,7 +99,7 @@ void conjuntos_intersectar(Conjuntos* conjunto, char* alias1, char* alias2, char
   CasillaHash* casilla2, * casilla3;
   casilla2 = tablahash_buscar(conjunto->tabla, alias2);
   casilla3 = tablahash_buscar(conjunto->tabla, alias3);
-  if(casilla3 == NULL || casilla2 == NULL)
+  if(casilla_empty(casilla2) || casilla_empty(casilla3))
     printf("No existen los conjuntos\n");
   else {
     arbol2 = casilla_obtener_dato(casilla2);
